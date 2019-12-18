@@ -10,7 +10,6 @@ module load Bowtie2/2.3.4.2
 bowtie2-build S_lycopersicum_chromosomes.fa S_lycopersicum_chromosomes
 
 ```
-* Four index files were created with the neame *GCA_003112345.1_ASM311234v1_genomic.1.bt2 .....GCA_003112345.1_ASM311234v1_genomic.4.bt2* in */mnt/home/ranawee1/01_A_annua_trichome/differential_expression*
 
 ### 2. Read qulity check before trimming
 It is essential to see the qulity of RNA seq files. 
@@ -59,15 +58,15 @@ java -jar $EBROOTTRIMMOMATIC/trimmomatic-0.38.jar PE -threads 4 SRR2239886_1.fas
 + specify the inputs and outputs - <input file_forfard><input_file_reverse><Output_file_forward_paired><Output_file_forward_unpaired><Output_file_reverse_paired><Output_file_reverse_unpaired> 
 ! ILLUMINACLIP:<fasta_WithAdapters>:<seed mismatches>:<palindrome clip threshold>:<simple clip threshold>
 ! ILLUMINACLIP:all_PE_adapters.fa:2:30:10   
-!   ILLUMINACLIP -  This step is used to find and remove Illumina adapters.
-!   all_PE_adapters.fa -  The file containing the adapter sequnces
-!   Seed_Mismatches - specifies the maximum mismatch count which will still allow a full match to be performed
-!   Palindrome_ClipThreshold: specifies how accurate the match between the two 'adapter ligated' reads must be for PE             palindrome read alignment.
+#   ILLUMINACLIP -  This step is used to find and remove Illumina adapters.
+#   all_PE_adapters.fa -  The file containing the adapter sequnces
+#   Seed_Mismatches - specifies the maximum mismatch count which will still allow a full match to be performed
+#   Palindrome_ClipThreshold: specifies how accurate the match between the two 'adapter ligated' reads must be for PE             palindrome read alignment.
 !   Simple_Clip_Threshold: specifies how accurate the match between any adapter etc. sequence must be against a read.
 ! SLIDINGWINDOW:<windowSize>:<requiredQuality>
 ! SLIDINGWINDOW:4:20
-!   Window_Size: specifies the number of bases to average across
-!   Required_Quality: specifies the average quality required.
+#   Window_Size: specifies the number of bases to average across
+#   Required_Quality: specifies the average quality required.
 ```
 
 Then,
@@ -105,3 +104,79 @@ We did this for both paired and non-paired files
 
 ### Mapping reads to genome
 
+We can do using two ways.
+   * using TopHat
+   * usinf BWA
+
+#### TopHat
+
+Aligns the short reads to the genome using Bowtie. 
+The paired ends and non paired end reads are aligned separatly.
+You can used the Bowtie indexes
+
+##### For paired end seqnces
+
+Run the script on;
+
+```
+/mnt/home/ranawee1/01_Solanum_lycopercicum_trichome/difrential_expression/map_reads_trimU
+
+```
+
+```ruby
+import os, sys
+path = sys.argv[1]
+os.chdir(path)
+for root, dirs, files in os.walk(path):
+    for f in files:
+        if f.endswith("_1.fastq.trimU"): 
+            print("tophat2 -p 4 -I 5000 -g 1 -o", "tophat_"+f.replace(".fastq.trimU", ""), "S_lycopersicum_chromosomes", f, f.replace("_1.fastq.trimU", "_2.fastq.trimU"))
+```
+Then,
+```
+python qsub_slurm.py -f submit -c do_all_tophat2_cmd.txt -p 4 -nnode 2  -u ranawee1 -w 1200  -m 10 -mo 'GCC/5.4.0-2.26 OpenMPI/1.10.3 TopHat/2.1.1 Bowtie2/2.3.2 SAMtools/1.5' -wd ./
+```
+
+```diff
+! still there is a bug when running the code. Please debug it
+```
+   * The results can be found in the same folder
+
+##### For non-paired end seqnces
+
+The pipeline is similer to the paired end once.
+
+#### BWA
+
+***have to write why we would use the BWA***
+
+Files can be found in,
+```
+/mnt/home/ranawee1/01_Solanum_lycopercicum_trichome/difrential_expression/BWA_alignments
+```
+
+##### For paired end seqnces
+
+* **First have to do the indexing**
+      * Copy genome to this folder (Once you create the index you can delete it)
+      * then,
+```
+module load GCC/5.4.0-2.26  OpenMPI/1.10.3 BWA/0.7.17
+
+bwa index S_lycopersicum_chromosomes.fa 
+```
+      * First you can map paired end reads using "do_all_BWA_alignment.py" in 
+```
+/mnt/home/ranawee1/01_Solanum_lycopercicum_trichome/difrential_expression/BWA_alignments/paired_reads
+```
+```ruby
+
+import os, sys
+path = sys.argv[1]
+os.chdir(path)
+for root, dirs, files in os.walk(path):
+        for f in files:
+            if f.endswith("_1.fastq.trimP"): 
+                print("bwa mem /mnt/home/ranawee1/01_Solanum_lycopercicum_trichome/difrential_expression/BWA_alignments/index_files/S_lycopersicum_chromosomes.fa", f, f.replace("_1.fastq.trimP", "_2.fastq.trimP"), ">", f.replace("_1.fastq.trimP", ".sam"))
+
+```
