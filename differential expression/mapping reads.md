@@ -54,7 +54,7 @@ for root, dirs, files in os.walk(path):
 java -jar $EBROOTTRIMMOMATIC/trimmomatic-0.38.jar PE -threads 4 SRR2239886_1.fastq SRR2239886_2.fastq SRR2239886_1.fastq.trimP SRR2239886_1.fastq.trimU SRR2239886_2.fastq.trimP SRR2239886_2.fastq.trimU ILLUMINACLIP:all_PE_adapters.fa:2:30:10 LEADING:3 TRAILING:3 SLIDINGWINDOW:4:20
 ```
 ```diff
-- latform and the path - <java -jar $EBROOTTRIMMOMATIC/trimmomatic-0.38.jar>
+- platform and the path - <java -jar $EBROOTTRIMMOMATIC/trimmomatic-0.38.jar>
 + specify the inputs and outputs - <input file_forfard><input_file_reverse><Output_file_forward_paired><Output_file_forward_unpaired><Output_file_reverse_paired><Output_file_reverse_unpaired> 
 ! ILLUMINACLIP:<fasta_WithAdapters>:<seed mismatches>:<palindrome clip threshold>:<simple clip threshold>
 ! ILLUMINACLIP:all_PE_adapters.fa:2:30:10   
@@ -138,7 +138,7 @@ python qsub_slurm.py -f submit -c do_all_tophat2_cmd.txt -p 4 -nnode 2  -u ranaw
 ```
 
 ```diff
-! still there is a bug when running the code. Please debug it
+- still there is a bug when running the code. Please debug it
 ```
    * The results can be found in the same folder
 
@@ -155,7 +155,6 @@ Files can be found in,
 /mnt/home/ranawee1/01_Solanum_lycopercicum_trichome/difrential_expression/BWA_alignments
 ```
 
-##### For paired end seqnces
 
 * **First have to do the indexing**
       * Copy genome to this folder (Once you create the index you can delete it)
@@ -165,7 +164,7 @@ module load GCC/5.4.0-2.26  OpenMPI/1.10.3 BWA/0.7.17
 
 bwa index S_lycopersicum_chromosomes.fa 
 ```
-      * First you can map paired end reads using "do_all_BWA_alignment.py" in 
+* Then you can map paired end reads using "do_all_BWA_alignment.py" in 
 ```
 /mnt/home/ranawee1/01_Solanum_lycopercicum_trichome/difrential_expression/BWA_alignments/paired_reads
 ```
@@ -180,3 +179,6 @@ for root, dirs, files in os.walk(path):
                 print("bwa mem /mnt/home/ranawee1/01_Solanum_lycopercicum_trichome/difrential_expression/BWA_alignments/index_files/S_lycopersicum_chromosomes.fa", f, f.replace("_1.fastq.trimP", "_2.fastq.trimP"), ">", f.replace("_1.fastq.trimP", ".sam"))
 
 ```
+
+      * once you map you can purge the paired end reads.
+
