@@ -1,7 +1,7 @@
 
 ## 1. Download the raw data
 
-The expression data are dowloaded from the NCBI SRA database.
+The expression data are downloaded from the NCBI SRA database.
 
 Species | Tissue | Accession
 -------- |-------|---------
@@ -13,11 +13,11 @@ Species | Tissue | Accession
 *Solanum lycopersicum*| Stem + Trichome |SRX1182185
  
 
-* Use the **qsub_slurm.py** to submit this as job.
-	fastq-dump SRX3562827 ---> all the accesions in a get_data.sh
+* Use the **qsub_slurm.py** to submit this as a job.
+    fastq-dump SRX3562827 ---> all the accessions in a get_data.sh
 * Also can use the script below and submit it through the qsub_slurm.py
 ~~~
-# this code uses two arguments. The first on is to acess the file with all the SRR accession and the secon one is the name of your output file.
+# This code uses two arguments. The first one is to access the file with all the SRR accession and the second one is the name of your output file.
 
 /mnt/home/ranawee1/01_Solanum_lycopercicum_trichome/difrential_expression/fastq_dump.py
 
@@ -30,7 +30,7 @@ for i in data_file:
     write_file.write("fastq-dump --split-3 %s" %(i))
 write_file.close
 
-# when submitting the looks like we have to load noyt only SRA-Toolkit but also Perl/5.28.1.
+# when submitting the looks like we have to load not only SRA-Toolkit but also Perl/5.28.1.
 
 python qsub_slurm.py -f submit -c full_dump_file.txt -p 4 -u ranawee1 -w 1200  -m 10 -mo 'SRA-Toolkit Perl/5.28.1' -wd ./
 ~~~
