@@ -33,8 +33,8 @@ python qsub_slurm.py -f submit -c do_all_fast_QC_nontrimmed_cmd.txt -p 4 -u rana
 ```
 
 ### 3. Trimming the reads
-Data trimming is a essential  step in analysing RNA seq. 
-We need to remove any adapter sequnces that might be present in the RNA sequnce reads.
+Data trimming is an essential step in analysing RNA seq. 
+We need to remove any adapter sequences that might be present in the RNA sequence reads.
 Also, we are pooling out the low quality bases from the sequnce reads.
 ```
 /mnt/home/ranawee1/01_Solanum_lycopercicum_trichome/difrential_expression/do_all_trimming.py 
@@ -74,12 +74,12 @@ Then,
 python qsub_slurm.py -f submit -c do_all_trimming_cmd.txt -p 4 -u ranawee1 -w 1200  -m 10 -mo 'Trimmomatic/0.38-Java-1.8.0_162' -wd ./
 ```
 * The trimming results in four output files:
-  * paired forward and revers file - Both reads survived the procesing
+  * paired forward and revers file - Both reads survived the processing
   * unpaired forward and revers - Both reads did not survive the filtering
 
-### 4. Read qulity check after trimming
+### 4. Read quality check after trimming
 
-We need to chek the read qulity of all the paired and non paired files
+We need to check the read quality of all the paired and non-paired files
 ```
 /mnt/home/ranawee1/01_Solanum_lycopercicum_trichome/difrential_expression/do_all_fast_QC_trimmedP.py
 /mnt/home/ranawee1/01_Solanum_lycopercicum_trichome/difrential_expression/do_all_fast_QC_trimmedU.py
@@ -102,17 +102,17 @@ python qsub_slurm.py -f submit -c fastQC_trimmed_cmd.txt -p 4 -u ranawee1 -w 120
 ```
 We did this for both paired and non-paired files
 
-### Mapping reads to genome
+### Mapping reads to the genome
 
 We can do using two ways.
    * using TopHat
-   * usinf BWA
+   * using BWA
 
 #### TopHat
 
 Aligns the short reads to the genome using Bowtie. 
-The paired ends and non paired end reads are aligned separatly.
-You can used the Bowtie indexes
+The paired ends and non-paired end reads are aligned separately.
+You can use the Bowtie indexes
 
 ##### For paired end seqnces
 
@@ -138,13 +138,13 @@ python qsub_slurm.py -f submit -c do_all_tophat2_cmd.txt -p 4 -nnode 2  -u ranaw
 ```
 
 ```diff
-- still there is a bug when running the code. Please debug it
+- still, there is a bug when running the code. Please debug it
 ```
    * The results can be found in the same folder
 
 ##### For non-paired end seqnces
 
-The pipeline is similer to the paired end once.
+The pipeline is similar to the paired-end once.
 
 #### BWA
 
@@ -180,5 +180,5 @@ for root, dirs, files in os.walk(path):
 
 ```
 
-      * once you map you can purge the paired end reads.
+      * once you map you can purge the paired-end reads.
 
