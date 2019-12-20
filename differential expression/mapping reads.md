@@ -113,6 +113,12 @@ We can do using two ways.
 Aligns the short reads to the genome using Bowtie. 
 The paired ends and non-paired end reads are aligned separately.
 You can use the Bowtie indexes
+   * when you run the tophat2 you need to run this is either in intel16|intel18
+   * Or you can upload each job submission shell script using
+```rubi
+sbatch --constraint="intel16|intel18" <your slurm script>
+
+```
 
 ##### For paired end seqnces
 
@@ -137,14 +143,12 @@ Then,
 python qsub_slurm.py -f submit -c do_all_tophat2_cmd.txt -p 4 -nnode 2  -u ranawee1 -w 1200  -m 10 -mo 'GCC/5.4.0-2.26 OpenMPI/1.10.3 TopHat/2.1.1 Bowtie2/2.3.2 SAMtools/1.5' -wd ./
 ```
 
-```diff
-- still, there is a bug when running the code. Please debug it
-```
    * The results can be found in the same folder
 
 ##### For non-paired end seqnces
 
 The pipeline is similar to the paired-end once.
+
 
 #### BWA
 
