@@ -153,7 +153,7 @@ The pipeline is similar to the paired-end once.
 
 #### BWA
 
-***have to write why we would use the BWA***
+***We are performing BWA as we can compaire our tophat2 results with BWA***
 
 Files can be found in,
 ```
@@ -193,4 +193,23 @@ Then,
 python qsub_slurm.py -f submit -c do_all_BWA_alignment_cmd.txt -p 4 -u ranawee1 -w 1200  -m 10 -mo 'GCC/5.4.0-2.26  OpenMPI/1.10.3 BWA/0.7.17' -wd ./
 ```
 
+* **once you have sam files we need to covert it in to .bam file where .bam file allocate less memory and easy to work with**
 
+
+   * we can run this script to creat a script that converts sam > bam (do_all_sam_to_bam_cmd.txt)
+```ruby
+import os, sys
+path = sys.argv[1]
+os.chdir(path)
+for root, dirs, files in os.walk(path):
+        for f in files:
+                if f.endswith(".sam"):
+                        print("samtools view -S -b", f, ">", f.replace(".sam", ".bam"))
+
+```
+
+Then,
+
+```
+ python qsub_slurm.py -f submit -c do_all_sam_to_bam_cmd.txt -p 4 -nnode 2  -u ranawee1 -w 1200  -m 10 -mo 'SAMtools/1.5' -wd ./
+```
