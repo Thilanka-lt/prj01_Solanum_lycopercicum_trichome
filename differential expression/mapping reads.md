@@ -51,7 +51,7 @@ for root, dirs, files in os.walk(path):
 ```
 * This creates set of outputs like following
 ```
-java -jar $EBROOTTRIMMOMATIC/trimmomatic-0.38.jar PE -threads 4 SRR2239886_1.fastq SRR2239886_2.fastq SRR2239886_1.fastq.trimP SRR2239886_1.fastq.trimU SRR2239886_2.fastq.trimP SRR2239886_2.fastq.trimU ILLUMINACLIP:all_PE_adapters.fa:2:30:10 LEADING:3 TRAILING:3 SLIDINGWINDOW:4:20
+java -jar $EBROOTTRIMMOMATIC/trimmomatic-0.38.jar PE -threads 4 SRR2239886_1.fastq SRR2239886_2.fastq SRR2239886_1.fastq.trimP SRR2239886_1.fastq.trimU SRR2239886_2.fastq.trimP SRR2239886_2.fastq.trimU ILLUMINACLIP:all_PE_adapters.fa:2:30:10 LEADING:3 TRAILING:3 SLIDINGWINDOW:4:20 MNILEN:36
 ```
 ```diff
 - platform and the path - <java -jar $EBROOTTRIMMOMATIC/trimmomatic-0.38.jar>
@@ -67,6 +67,7 @@ java -jar $EBROOTTRIMMOMATIC/trimmomatic-0.38.jar PE -threads 4 SRR2239886_1.fas
 ! SLIDINGWINDOW:4:20
 #   Window_Size: specifies the number of bases to average across
 #   Required_Quality: specifies the average quality required.
+! MNILEN : Specify the minimum length of the squnce after trimming. 
 ```
 
 Then,
@@ -185,4 +186,11 @@ for root, dirs, files in os.walk(path):
 ```
 
       * once you map you can purge the paired-end reads.
+
+Then,
+
+```
+python qsub_slurm.py -f submit -c do_all_BWA_alignment_cmd.txt -p 4 -u ranawee1 -w 1200  -m 10 -mo 'GCC/5.4.0-2.26  OpenMPI/1.10.3 BWA/0.7.17' -wd ./
+```
+
 
