@@ -213,3 +213,28 @@ Then,
 ```
  python qsub_slurm.py -f submit -c do_all_sam_to_bam_cmd.txt -p 4 -nnode 2  -u ranawee1 -w 1200  -m 10 -mo 'SAMtools/1.5' -wd ./
 ```
+
+* The Cufflink needs the sorted .bam file insted of raw output. 
+
+Get the following script and run.
+```
+/mnt/home/ranawee1/01_Solanum_lycopercicum_trichome/difrential_expression/trimming_with_minlen_36/cufflinks/BWA_alignments/do_all_bam_sorting.py
+```
+```ruby
+
+import os, sys
+path = sys.argv[1]
+os.chdir(path)
+for root, dirs, files in os.walk(path):
+    for f in files:
+        if f.endswith(".bam"):
+            print("samtools sort", f,"-o", f.replace(".bam","_sorted.bam"))
+```
+Once you create the sorted .bam files then you can purge the unsorted bam files
+
+Then,
+
+```
+python qsub_slurm.py -f submit -c do_all_BWA_alignment_cmd.txt -p 4 -u ranawee1 -w 1200  -m 10 -mo 'GCC/5.4.0-2.26  OpenMPI/1.10.3 SAMtools/1.5' -wd ./
+```
+
